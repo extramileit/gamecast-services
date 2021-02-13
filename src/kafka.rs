@@ -3,7 +3,7 @@ use rdkafka::{ClientConfig, Message};
 use rdkafka::consumer::{StreamConsumer, Consumer};
 use rdkafka::config::RDKafkaLogLevel;
 use log::*;
-use rdkafka::message::{BorrowedMessage};
+use rdkafka::message::{BorrowedMessage, FromBytes};
 use futures_util::{TryStreamExt};
 
 pub async fn receive_messages(cfg: KafkaConfig) {
@@ -42,4 +42,6 @@ async fn record_borrowed_message_receipt(msg: &BorrowedMessage<'_>) {
     // Simulate some work that must be done in the same order as messages are
     // received; i.e., before truly parallel processing can begin.
     info!("Message received: {}", msg.offset());
+    let payload_str = str::from_bytes(msg.payload().unwrap()).unwrap();
+    info!("Message contents: {}", payload_str);
 }
