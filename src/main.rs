@@ -1,28 +1,33 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use log::info;
+use simple_logger::SimpleLogger;
+use tokio::runtime::Runtime;
+use futures::future::join_all;
+use config::KafkaConfig;
+use crate::kafka::receive_messages;
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
+mod config;
+mod kafka;
+mod baseball;
 
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
-}
 
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
-}
+fn main() {
+    let cfg = KafkaConfig::new();
+    println!("{:#?}", cfg);
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .service(hello)
-            .service(echo)
-            .route("/hey", web::get().to(manual_hello))
-    })
-        .bind("127.0.0.1:9080")?
-        .run()
-        .await
+    SimpleLogger::new()
+        .with_level(cfg.log_level.to_level_filter())
+        .init().expect("Could not init logger");
+
+    info!("Logging initialized with level {}", cfg.log_level);
+
+    Runtime::new().unwrap().block_on(async {
+        let futures =
+            (0..cfg.parallel_operations)
+                .map(|_| {
+                    tokio::spawn(
+                        receive_messages(cfg.clone())
+                    )
+                });
+        join_all(futures).await;
+    });
 }
