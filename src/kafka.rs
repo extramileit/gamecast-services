@@ -5,6 +5,9 @@ use rdkafka::config::RDKafkaLogLevel;
 use log::*;
 use rdkafka::message::{BorrowedMessage, FromBytes};
 use futures_util::{TryStreamExt};
+use crate::billiards::Action;
+use rdkafka::error::KafkaError;
+use serde_json::Error;
 
 pub async fn receive_messages(cfg: KafkaConfig) {
     let consumer = create_consumer(&cfg.kafka_brokers, &cfg.kafka_consumer_group, &cfg.kafka_input_topic);
@@ -12,7 +15,21 @@ pub async fn receive_messages(cfg: KafkaConfig) {
     let stream_processor = consumer.stream().try_for_each(|borrowed_message| {
        async move {
            record_borrowed_message_receipt(&borrowed_message).await;
-           // let owned_message = borrowed_message.detach();
+           let owned_message = borrowed_message.detach();
+           match owned_message.payload() {
+               Some(payload) => {
+                   let action: Result<Action, Error> = serde_json::from_slice(payload);
+                   match action {
+                       Ok(action) => {
+                           println!("action: {:?}", action);
+                       }
+                       Err(e) => {
+                           error!("Error parsing payload: {}", e);
+                       }
+                   }
+               }
+               None => {}
+           }
            Ok(())
        }
     });

@@ -1,11 +1,12 @@
 use std::str::FromStr;
 use crate::billiards::player::Player;
 use crate::billiards::team::Team;
-use chrono::{Local, DateTime};
+// use chrono::{Local, DateTime};
+use serde::{Serialize, Deserialize};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Action {
-    BeginTeamCompetition { home_team_id: i32, away_team_id: i32, event_date: DateTime<Local>, venue_id: i32 },
+    BeginTeamCompetition { home_team_id: i32, away_team_id: i32, venue_id: i32 },
     BeginMatch { team_competition_id: i32, top_player_id: i32, bottom_player_id: i32 },
     BeginGame { match_id: i32, game_index: u8, breaker_player_id: i32 },
     TableRun { match_id: i32, game_index: u8 },

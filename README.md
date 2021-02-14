@@ -17,9 +17,16 @@
 4. Publish event messages
   ```    
   bin/kafka-console-producer.sh --topic game-events --bootstrap-server localhost:9092
-  
-  --input event messages at prompt
-  ```    
+  ```
+5. Add event messages at prompt
+
+### Sample event messages
+
+- BeginTeamCompetition
+  ``` 
+  {"BeginTeamCompetition": {"home_team_id": 1, "away_team_id": 2, "venue_id": 1}}
+  ``` 
+
 
 
 

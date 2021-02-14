@@ -1,3 +1,5 @@
+pub use action::Action;
+
 mod action;
 mod team;
 mod team_competition;
