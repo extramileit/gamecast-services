@@ -176,10 +176,12 @@ name = "gamecast-services"
 version = "0.1.0"
 dependencies = [
  "bytes",
+ "chrono",
  "futures",
  "futures-util",
  "log",
  "rdkafka",
+ "redux-rs",
  "serde",
  "serde_json",
  "simple_logger",
@@ -466,6 +468,12 @@ checksum = "05ec8ca9416c5ea37062b502703cd7fcb207736bc294f6e0cf367ac6fc234570"
 dependencies = [
  "bitflags",
 ]
+
+[[package]]
+name = "redux-rs"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "44c3d106b84c9044b163a3872ff390fc37d639e685dc17b2f5b078a4f55c5e06"
 
 [[package]]
 name = "ryu"

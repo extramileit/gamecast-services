@@ -7,7 +7,7 @@ use crate::kafka::receive_messages;
 
 mod config;
 mod kafka;
-mod baseball;
+mod billiards;
 
 
 fn main() {
@@ -30,4 +30,5 @@ fn main() {
                 });
         join_all(futures).await;
     });
+
 }
