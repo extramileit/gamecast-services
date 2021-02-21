@@ -12,7 +12,7 @@ use serde_json::Error;
 pub async fn receive_messages(cfg: KafkaConfig) {
     let consumer = create_consumer(&cfg.kafka_brokers, &cfg.kafka_consumer_group, &cfg.kafka_input_topic);
 
-    let stream_processor = consumer.stream().try_for_each(|borrowed_message| {
+    let stream_processor = consumer.start().try_for_each(|borrowed_message| {
        async move {
            record_borrowed_message_receipt(&borrowed_message).await;
            let owned_message = borrowed_message.detach();

@@ -7,13 +7,13 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version = "1.2.0", features = ["full"] }
+tokio = { version = "0.2.25", features = ["full"] }
 futures = "0.3.12"
 futures-util = "0.3.12"
 bytes = "1.0.1"
 
 # communication with kafka
-rdkafka = "0.25.0"
+rdkafka = "0.24.0"
 
 log = "0.4.14"
 simple_logger = "1.11.0"
@@ -26,3 +26,6 @@ serde_json = "1.0.62"
 redux-rs = "0.1.0"
 
 chrono = "0.4.19"
+
+#persistence
+mongodb = "1.2.0"
